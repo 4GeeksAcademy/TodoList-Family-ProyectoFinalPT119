@@ -1,16 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
 
 db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     uuid_contraseña: Mapped[str] = mapped_column(String(255), nullable=False)
+    db_perfil_user: Mapped[list['Perfil']] = relationship(back_populates='db_user_perfil')
+    db_clan_user: Mapped[list['Clan']] = relationship(back_populates='db_user_clan')
+    db_tareas_asignadas_user: Mapped[list['TareasAsignadas']] = relationship(back_populates='db_user_tareas_asignadas')
 
     def __repr__(self):
         return f'{self.email}'
@@ -23,19 +27,19 @@ class User(db.Model):
 
 class Perfil(db.Model):
     __tablename__ = 'perfil'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     nombre: Mapped[str] = mapped_column(String(80), nullable=False)
     foto: Mapped[str] = mapped_column(String(255), nullable=True)
     presentacion: Mapped[str] = mapped_column(String(250), nullable=True)
     telefono: Mapped[str] = mapped_column(String(20), nullable=True)
-    edad: Mapped[int] = mapped_column(nullable=True)
+    edad: Mapped[int] = mapped_column(Integer, nullable=True)
     ciudad: Mapped[str] = mapped_column(String(80), nullable=True)
     genero: Mapped[str] = mapped_column(String(80), nullable=True)
     twitter: Mapped[str] = mapped_column(String(80), nullable=True)
     facebook: Mapped[str] = mapped_column(String(80), nullable=True)
     instagram: Mapped[str] = mapped_column(String(80), nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-
+    db_user_perfil: Mapped['User'] = relationship(back_populates='db_perfil_user')
 
     def __repr__(self):
         return f'{self.nombre}'
@@ -58,17 +62,19 @@ class Perfil(db.Model):
 
 class Tareas(db.Model):
     __tablename__ = 'tareas'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     titulo: Mapped[str] = mapped_column(String(80), nullable=False)
     evento_id: Mapped[int] = mapped_column(ForeignKey('evento.id'))
-
-    fecha: Mapped[str] = mapped_column(DateTime, nullable=True)
+    db_evento_tareas: Mapped['Evento'] = relationship(back_populates='db_tareas_evento')
+    fecha: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     descripcion: Mapped[str] = mapped_column(String(250), nullable=True)
-    Prioridad_id: Mapped[int] = mapped_column(ForeignKey('prioridad.id'))
-
+    prioridad_id: Mapped[int] = mapped_column(ForeignKey('prioridad.id'))
+    db_prioridad_tareas: Mapped['Prioridad'] = relationship(back_populates='db_tareas_prioridad')
     estado_id: Mapped[int] = mapped_column(ForeignKey('estado.id'))
-
+    db_estado_tareas: Mapped['Estado'] = relationship(back_populates='db_tareas_estado')
     imagen: Mapped[str] = mapped_column(String(255), nullable=True)
+    db_mision_tareas: Mapped[list['Mision']] = relationship(back_populates='db_tareas_mision')
+    db_tareas_asignadas_tareas: Mapped[list['TareasAsignadas']] = relationship(back_populates='db_tareas_tareas_asignadas')
 
 
     def __repr__(self):
@@ -82,14 +88,15 @@ class Tareas(db.Model):
             "descripcion": self.descripcion,
             "fecha": self.fecha,
             "evento_id": self.evento_id,
-            "prioridad_id": self.Prioridad_id,
+            "prioridad_id": self.prioridad_id,
             "estado_id": self.estado_id,
         }
     
 class Estado(db.Model):
     __tablename__ = 'estado'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     tipo: Mapped[str] = mapped_column(String(20), nullable=True)
+    db_tareas_estado: Mapped[list['Tareas']] = relationship(back_populates='db_estado_tareas')
 
     def __repr__(self):
         return f'{self.tipo}'
@@ -102,9 +109,10 @@ class Estado(db.Model):
     
 class Evento(db.Model):
     __tablename__ = 'evento'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     titulo: Mapped[str] = mapped_column(String(20), nullable=False)
     lugar: Mapped[str] = mapped_column(String(100), nullable=False)
+    db_tareas_evento: Mapped[list['Tareas']] = relationship(back_populates='db_evento_tareas')
 
     def __repr__(self):
         return f'{self.titulo}'
@@ -118,8 +126,9 @@ class Evento(db.Model):
     
 class Prioridad(db.Model):
     __tablename__ = 'prioridad'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     nivel: Mapped[str] = mapped_column(String(20), nullable=False)
+    db_tareas_prioridad: Mapped[list['Tareas']] = relationship(back_populates='db_prioridad_tareas')
 
     def __repr__(self):
         return f'{self.nivel}'
@@ -132,12 +141,14 @@ class Prioridad(db.Model):
 
 class Grupo(db.Model):
     __tablename__ = 'grupo'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     nombre: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     categoria_id: Mapped[int] = mapped_column(ForeignKey('categoria.id'))
-
-    fecha: Mapped[str] = mapped_column(DateTime, nullable=True)
-    codigo: Mapped[str] = mapped_column(Integer, nullable=True)
+    db_categoria_grupo: Mapped['Categoria'] = relationship(back_populates='db_grupo_categoria')
+    fecha: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    codigo: Mapped[int] = mapped_column(Integer, nullable=True)
+    db_clan_grupo: Mapped[list['Clan']] = relationship(back_populates='db_grupo_clan')
+    db_mision_grupo: Mapped[list['Mision']] = relationship(back_populates='db_grupo_mision')
 
     def __repr__(self):
         return f'{self.nombre}'
@@ -153,8 +164,9 @@ class Grupo(db.Model):
     
 class Categoria(db.Model):
     __tablename__ = 'categoria'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     nombre: Mapped[str] = mapped_column(String(80), nullable=False)
+    db_grupo_categoria: Mapped[list['Grupo']] = relationship(back_populates='db_categoria_grupo')
 
     def __repr__(self):
         return f'{self.nombre}'
@@ -167,10 +179,11 @@ class Categoria(db.Model):
     
 class Clan(db.Model):
     __tablename__ = 'clan'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-
+    db_user_clan: Mapped['User'] = relationship(back_populates='db_clan_user')
     grupo_id: Mapped[int] = mapped_column(ForeignKey('grupo.id'))
+    db_grupo_clan: Mapped['Grupo'] = relationship(back_populates='db_clan_grupo')
 
 
     def __repr__(self):
@@ -185,10 +198,11 @@ class Clan(db.Model):
     
 class Mision(db.Model):
     __tablename__ = 'mision'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     tareas_id: Mapped[int] = mapped_column(ForeignKey('tareas.id'))
-
+    db_tareas_mision: Mapped['Tareas'] = relationship(back_populates='db_mision_tareas')
     grupo_id: Mapped[int] = mapped_column(ForeignKey('grupo.id'))
+    db_grupo_mision: Mapped['Grupo'] = relationship(back_populates='db_mision_grupo')
 
 
     def __repr__(self):
@@ -203,10 +217,11 @@ class Mision(db.Model):
     
 class TareasAsignadas(db.Model):
     __tablename__ = 'tareas_asignadas'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-
+    db_user_tareas_asignadas: Mapped['User'] = relationship(back_populates='db_tareas_asignadas_user')
     tareas_id: Mapped[int] = mapped_column(ForeignKey('tareas.id'))
+    db_tareas_tareas_asignadas: Mapped['Tareas'] = relationship(back_populates='db_tareas_asignadas_tareas')
 
 
     def __repr__(self):
