@@ -11,7 +11,7 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
-    uuid_contraseña: Mapped[str] = mapped_column(String(255), nullable=False)
+    uuid_contraseña: Mapped[str] = mapped_column(String(255), nullable=True)
     db_perfil_user: Mapped[list['Perfil']] = relationship(back_populates='db_user_perfil')
     db_clan_user: Mapped[list['Clan']] = relationship(back_populates='db_user_clan')
     db_tareas_asignadas_user: Mapped[list['TareasAsignadas']] = relationship(back_populates='db_user_tareas_asignadas')
