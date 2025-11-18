@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../styles/ProfileGroups.css";
+import ModalCreateTask from "../components/ModalCreateTask";
 
 const TaskListItem = ({ task, onToggle, onDelete }) => (
     <li className="list-group-item d-flex justify-content-between align-items-center task-list-item"
@@ -49,8 +50,10 @@ export const Dashboard = () => {
     // Total completadas
     const completedTaskCount = store.userTasks.filter(t => t.completed).length + store.clanTasks.filter(t => t.completed).length;
 
-    // Finanzas placeholder
-    const totalExpenses = 0;
+    // --- CÁLCULO GASTOS DEL MES ---
+    const totalPersonalExpenses = store.personalExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalClanExpenses = store.expenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalExpenses = totalPersonalExpenses + totalClanExpenses;
 
     const openTaskModal = (type) => {
         setTaskType(type);
@@ -152,14 +155,17 @@ export const Dashboard = () => {
             )}
 
             {/* --- NUEVO MODAL PARA AÑADIR TAREAS --- */}
-            {showTaskModal && (
+            {
+                (showTaskModal && taskType === "user") && <ModalCreateTask setShowTaskModal={setShowTaskModal}/>
+            }
+            {showTaskModal && taskType !== "user" && (
                 <div className="modal" tabIndex="-1" style={{ display: "block" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content modal-content-dark">
                             <form onSubmit={handleAddTask}>
                                 <div className="modal-header">
                                     <h5 className="modal-title">
-                                        {taskType === 'user' ? 'Añadir Tarea Personal' : 'Añadir Tarea de Clan'}
+                                        Añadir Tarea de Clan
                                     </h5>
                                     <button type="button" className="btn-close" onClick={() => setShowTaskModal(false)}></button>
                                 </div>

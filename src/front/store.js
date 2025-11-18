@@ -17,6 +17,26 @@ export const initialStore = () => {
       avatar:
         "https://res.cloudinary.com/dmx0zjkej/image/upload/v1762540958/LOGO_600_x_600_muoehy.png",
     },
+    friends: [
+      {
+        id: 1,
+        name: "Amigo Uno",
+        status: "online",
+        avatar: "https://i.pravatar.cc/150?img=11",
+      },
+      {
+        id: 2,
+        name: "Amiga Dos",
+        status: "offline",
+        avatar: "https://i.pravatar.cc/150?img=12",
+      },
+      {
+        id: 3,
+        name: "Amigo Tres",
+        status: "online",
+        avatar: "https://i.pravatar.cc/150?img=13",
+      },
+    ],
     clans: [
       {
         id: 1,

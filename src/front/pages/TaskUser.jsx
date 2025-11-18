@@ -35,8 +35,8 @@ export const TaskUser = () => {
 		<div className="container mt-5">
 			<h1 className="display-4 text-center mb-4">Tareas</h1>
 			<div className="row justify-content-center">
-				{store.tareas && store.tareas.length > 0 ? (
-					store.tareas.map(tarea => (
+				{store.userTasks && store.userTasks.length > 0 ? (
+					store.userTasks.map(tarea => (
 						<div key={tarea.id} className="col-md-5 mb-4">
 							<div className="card shadow-sm" style={{ borderLeft: "6px solid #1e91ed" }}>
 								<div className="card-body">
