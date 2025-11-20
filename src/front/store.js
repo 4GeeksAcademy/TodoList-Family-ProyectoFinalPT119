@@ -91,7 +91,7 @@ export const initialStore = () => {
       3: 200.0,
     },
 
-    // 🔥 Recuperado del revert
+    // Recuperado del revert
     token: localStorage.getItem("token") || null,
 
     // Finanzas
