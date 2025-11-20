@@ -223,12 +223,7 @@ export const Dashboard = () => {
                 <div className="dashboard-content-area page-container">
                     <div className="welcome-section">
                         <h2>Bienvenido de nuevo '{store.profile.name}'</h2>
-                        <Link to="/login">
-                            <button className="btn btn-invite-user" onClick={() => setShowInviteModal(true)}>
-                                <i className="fas fa-user-plus me-2"></i>
-                                Login
-                            </button>
-                        </Link>
+                       
 
 
                     </div>
@@ -260,33 +255,7 @@ export const Dashboard = () => {
                             </div>
                         </div>
 
-                        {/* --- TARJETA DE FINANZAS UNIFICADA --- */}
-                        <div className="col-lg-6">
-                            <div className="dashboard-card">
-                                <h3 className="mb-0">Resumen Financiero</h3>
-                                <div className="row">
-                                    {/* Saldo Bote Personal */}
-                                    <div className="col-md-6 text-center border-end">
-                                        <h4 className="text-muted">Saldo del Bote</h4>
-                                        <div className="my-3">
-                                            <i className="fas fa-coins fa-3x mb-2" style={{ color: '#FFD700' }}></i>
-                                            <h2 className="display-4 fw-bold text-info">{store.personalBote.toFixed(2)}€</h2>
-                                        </div>
-                                    </div>
-                                    {/* Gastos del Mes (Total) */}
-                                    <div className="col-md-6 text-center">
-                                        <h4 className="text-muted">Gastos del Mes</h4>
-                                        <div className="my-3">
-                                            <i className="fas fa-chart-line fa-3x mb-2 text-danger"></i>
-                                            <h2 className="display-4 fw-bold text-danger">{totalExpenses.toFixed(2)}€</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* --- FIN DE TARJETA UNIFICADA --- */}
-
-                        {/* Tareas de Clanes */}
+                      {/* Tareas de Clanes */}
                         <div className="col-lg-4 col-md-6">
                             <div className="dashboard-card">
                                 <div className="card-header-actions">
@@ -314,7 +283,6 @@ export const Dashboard = () => {
                                 </ul>
                             </div>
                         </div>
-
                         {/* Tareas Completadas */}
                         <div className="col-lg-4 col-md-6">
                             <div className="dashboard-card">
@@ -328,14 +296,33 @@ export const Dashboard = () => {
                             </div>
                         </div>
 
-                        {/* Próximos Eventos */}
-                        <div className="col-lg-4 col-md-6">
+                           {/* --- TARJETA DE FINANZAS UNIFICADA --- */}
+                        <div className="col-lg-6">
                             <div className="dashboard-card">
-                                <h3>Próximos Eventos</h3>
-                                <p className="text-muted text-center mt-4">No hay eventos próximos.</p>
+                                <h3 className="mb-0">Resumen Financiero</h3>
+                                <div className="row">
+                                    {/* Saldo Bote Personal */}
+                                    <div className="col-md-6 text-center border-end">
+                                        <h4 className="text-muted">Saldo del Bote</h4>
+                                        <div className="my-3">
+                                            <i className="fas fa-coins fa-3x mb-2" style={{ color: '#FFD700' }}></i>
+                                            <h2 className="display-4 fw-bold text-info">{store.personalBote.toFixed(2)}€</h2>
+                                        </div>
+                                    </div>
+                                    {/* Gastos del Mes (Total) */}
+                                    <div className="col-md-6 text-center">
+                                        <h4 className="text-muted">Gastos del Mes</h4>
+                                        <div className="my-3">
+                                            <i className="fas fa-chart-line fa-3x mb-2 text-danger"></i>
+                                            <h2 className="display-4 fw-bold text-danger">{totalExpenses.toFixed(2)}€</h2>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        {/* --- FIN DE TARJETA UNIFICADA --- */}
 
+                        
                         {/* Mensajes (Placeholder) */}
                         <div className="col-12">
                             <div className="dashboard-card text-center">

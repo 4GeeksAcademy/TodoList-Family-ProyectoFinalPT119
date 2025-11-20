@@ -16,6 +16,7 @@ import { Groups } from "./pages/Groups";
 import { TaskUser } from "./pages/TaskUser";
 import { Finances } from "./pages/Finances";
 import { Config } from "./pages/Config"
+import Home from "./pages/Home";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
@@ -26,8 +27,8 @@ export const router = createBrowserRouter(
 
       // Root Route: All navigation will start from here.
         <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Ruta explícita */}
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} /> {/* Ruta explícita */}
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
         
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
@@ -39,6 +40,7 @@ export const router = createBrowserRouter(
         <Route path="/tasks" element={<TaskUser />} /> 
         <Route path="/finances" element={<Finances />} /> 
         <Route path="/config" element={<Config />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Route>
     )
 );
