@@ -1,63 +1,82 @@
-import React, { useEffect } from "react"
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import React from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const TaskUser = () => {
+    const { store } = useGlobalReducer();
+    const tasks = store.userTasks; // Conexión directa con el Dashboard
 
-	const { store, dispatch } = useGlobalReducer()
+    return (
+        <div className="container mt-5 page-container">
+            <div className="row mb-4">
+                <div className="col-12 text-center">
+                    <h1 className="text-white display-4 fw-bold">Tareas</h1>
+                    <p className="text-white-50">Tus tareas personales detalladas</p>
+                </div>
+            </div>
 
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
+            <div className="row">
+                {tasks && tasks.length > 0 ? (
+                    tasks.map((task) => (
+                        <div key={task.id} className="col-md-6 mb-4">
+                            {/* Tarjeta estilo visual de la imagen */}
+                            <div 
+                                className="card h-100 shadow-sm border-0" 
+                                style={{ 
+                                    borderRadius: "20px", 
+                                    backgroundColor: "#E3E8EF", // Color grisáceo de la imagen
+                                    padding: "20px"
+                                }}
+                            >
+                                <div className="card-body">
+                                    {/* Título grande */}
+                                    <h3 className="card-title fw-bold mb-4" style={{ color: "#2c3e50" }}>
+                                        {task.title}
+                                    </h3>
 
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
+                                    {/* Campos solicitados en la imagen */}
+                                    <div className="card-text" style={{ fontSize: "1.1rem", color: "#4a5568" }}>
+                                        
+                                        <p className="mb-2">
+                                            <strong>Fecha:</strong> {task.date || "No definida"} 
+                                            <span className="mx-3">|</span>
+                                            <strong>Hora:</strong> {task.time || "--:--"}
+                                        </p>
 
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
+                                        <p className="mb-2">
+                                            <strong>Dirección:</strong> {task.address || "Sin ubicación"}
+                                        </p>
 
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
+                                        <p className="mb-2">
+                                            <strong>Invitados:</strong> {task.guests ? task.guests.join(", ") : "Ninguno"}
+                                        </p>
 
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
-	}
-
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
-	return (
-		<div className="container mt-5">
-			<h1 className="display-4 text-center mb-4">Tareas</h1>
-			<div className="row justify-content-center">
-				{store.userTasks && store.userTasks.length > 0 ? (
-					store.userTasks.map(tarea => (
-						<div key={tarea.id} className="col-md-5 mb-4">
-							<div className="card shadow-sm" style={{ borderLeft: "6px solid #1e91ed" }}>
-								<div className="card-body">
-									<h5 className="card-title" style={{ color: "#7f00b2" }}>{tarea.titulo}</h5>
-									<p className="card-text">{tarea.descripcion}</p>
-									<p className="mb-1"><strong>Fecha:</strong> {tarea.fecha} <strong>Hora:</strong> {tarea.hora}</p>
-									<p className="mb-1"><strong>Dirección:</strong> {tarea.direccion}</p>
-									<p className="mb-1"><strong>Invitados:</strong> {tarea.invitados && tarea.invitados.join(', ')}</p>
-									{tarea.lat && tarea.lng && (
-										<p className="mb-1"><strong>Ubicación:</strong> {tarea.lat}, {tarea.lng}</p>
-									)}
-								</div>
-							</div>
-						</div>
-					))
-				) : (
-					<div className="col-12 text-center">
-						<span className="text-danger">No hay tareas</span>
-					</div>
-				)}
-			</div>
-		</div>
-	);
-}; 
+                                        {/* Extra: Descripción si existe (del modal) */}
+                                        {task.description && (
+                                            <div className="mt-3 p-3 bg-white rounded text-muted small">
+                                                <em>"{task.description}"</em>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Extra: Indicador de lat/lng si existe */}
+                                        {task.latitude && (
+                                            <div className="mt-2 text-success small">
+                                                <i className="fas fa-map-marker-alt me-1"></i> Ubicación GPS adjunta
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="col-12 text-center mt-5">
+                        <div className="alert alert-info d-inline-block p-4 rounded-3">
+                            <h4><i className="fas fa-info-circle me-2"></i> No tienes tareas pendientes</h4>
+                            <p className="mb-0">Ve al <strong>Escritorio</strong> para añadir nuevas tareas personales.</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};

@@ -19,32 +19,6 @@ const FriendListItem = ({ friend }) => (
     </div>
 );
 
-// --- NUEVO: Componente Calendario Placeholder ---
-const CalendarPlaceholder = () => (
-    <div className="calendar-placeholder">
-        <div className="calendar-header">
-            <button className="btn btn-sm btn-custom-blue">Previous</button>
-            <span>Noviembre 2025</span>
-            <button className="btn btn-sm btn-custom-blue">Next</button>
-        </div>
-        <div className="calendar-grid">
-            {/* Días de la semana */}
-            <div className="day-name">L</div><div className="day-name">M</div><div className="day-name">X</div>
-            <div className="day-name">J</div><div className="day-name">V</div><div className="day-name">S</div><div className="day-name">D</div>
-            {/* Días (ejemplo) */}
-            <div className="day other-month">27</div><div className="day other-month">28</div><div className="day other-month">29</div>
-            <div className="day other-month">30</div><div className="day other-month">31</div><div className="day">1</div><div className="day">2</div>
-            <div className="day">3</div><div className="day">4</div><div className="day">5</div><div className="day">6</div><div className="day">7</div>
-            <div className="day">8</div><div className="day">9</div><div className="day">10</div><div className="day">11</div><div className="day">12</div>
-            <div className="day">13</div><div className="day">14</div><div className="day">15</div><div className="day">16</div><div className="day">17</div>
-            <div className="day">18</div><div className="day">19</div><div className="day">20</div><div className="day">21</div><div className="day">22</div>
-            <div className="day">23</div><div className="day">24</div><div className="day">25</div><div className="day">26</div><div className="day">27</div>
-            <div className="day">28</div><div className="day">29</div><div className="day">30</div>
-        </div>
-    </div>
-);
-
-
 export const Profile = () => {
     const { store, dispatch } = useGlobalReducer();
 
@@ -80,18 +54,23 @@ export const Profile = () => {
         setShowBoteModal(false);
     };
 
-    // --- DATOS DINÁMICOS PARA LA BARRA SUPERIOR (CONECTADOS) ---
-    // Total tareas = Tareas de usuario + Tareas de clan
+    // --- DATOS DINÁMICOS PARA LA BARRA SUPERIOR ---
     const tasksCompleted = store.userTasks.filter(t => t.completed).length + store.clanTasks.filter(t => t.completed).length;
     const tasksPending = store.userTasks.filter(t => !t.completed).length + store.clanTasks.filter(t => !t.completed).length;
     const clanCount = store.clans.length;
+
+    // --- LÓGICA DE GASTOS DEL MES (NUEVO) ---
+    // Sumamos gastos personales + gastos de todos los clanes
+    const totalPersonalExpenses = store.personalExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalClanExpenses = store.expenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalExpenses = totalPersonalExpenses + totalClanExpenses;
 
     return (
         <div className="container page-container">
 
             {/* --- MODAL PARA EDITAR PERFIL --- */}
             {showModal && (
-                <div className="modal" tabIndex="-1" style={{ display: "block" }}>
+                <div className="modal" tabIndex="-1" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog modal-dialog-centered modal-lg">
                         <div className="modal-content modal-content-dark">
                             <form onSubmit={handleSubmit}>
@@ -118,7 +97,6 @@ export const Profile = () => {
                                             <div className="mb-3"><label className="form-label">Facebook</label><input type="text" name="social.facebook" className="form-control" value={formData.social.facebook} onChange={handleChange} /></div>
                                         </div>
                                     </div>
-                                    <hr />
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
@@ -132,7 +110,7 @@ export const Profile = () => {
 
             {/* --- MODAL PARA EDITAR BOTE --- */}
             {showBoteModal && (
-                <div className="modal" tabIndex="-1" style={{ display: "block" }}>
+                <div className="modal" tabIndex="-1" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content modal-content-dark">
                             <form onSubmit={handleBoteSubmit}>
@@ -145,7 +123,7 @@ export const Profile = () => {
                                         <label htmlFor="boteAmount" className="form-label">Nuevo Saldo (€)</label>
                                         <input
                                             type="number"
-                                            step="1" // <-- CAMBIO A NÚMEROS ENTEROS
+                                            step="1"
                                             className="form-control"
                                             id="boteAmount"
                                             value={boteAmount}
@@ -164,25 +142,17 @@ export const Profile = () => {
                 </div>
             )}
 
-            {(showModal || showBoteModal) && <div className="modal-backdrop fade show"></div>}
-
-            {/* --- CONTENIDO DE LA PÁGINA (NUEVO LAYOUT) --- */}
+            {/* --- CONTENIDO DE LA PÁGINA --- */}
             <div className="main-box">
                 <div className="row">
                     {/* --- COLUMNA IZQUIERDA (Perfil + Amigos) --- */}
                     <div className="col-lg-4 profile-column-left">
-                        {/* Info Perfil */}
                         <div className="text-center">
                             <img
                                 src={store.profile.avatar}
                                 alt="Foto de perfil"
                                 className="img-fluid rounded-circle mb-3"
-                                style={{
-                                    width: "120px",
-                                    height: "120px",
-                                    objectFit: "cover",
-                                    border: "3px solid #6366F1"
-                                }}
+                                style={{ width: "120px", height: "120px", objectFit: "cover", border: "3px solid #6366F1" }}
                             />
                             <h3>{store.profile.name}</h3>
                             <p className="text-muted">{store.profile.email}</p>
@@ -190,9 +160,7 @@ export const Profile = () => {
                                 Editar Perfil
                             </button>
                         </div>
-                        {/* Barra de Búsqueda Amigos (Placeholder) */}
                         <input type="text" className="form-control my-4" placeholder="Buscar amigos..." style={{ backgroundColor: "rgba(0,0,0,0.05)", color: "#333", borderColor: "rgba(0,0,0,0.1)" }} />
-                        {/* Lista de Amigos */}
                         <div className="friend-list">
                             <h5 className="mb-3">Amigos activos</h5>
                             {store.friends.map(friend => (
@@ -201,17 +169,16 @@ export const Profile = () => {
                         </div>
                     </div>
 
-                    {/* --- COLUMNA DERECHA (Cuadrícula 2x2 + Bote) --- */}
+                    {/* --- COLUMNA DERECHA --- */}
                     <div className="col-lg-8">
-                        {/* --- BARRA DE RESUMEN (ACTUALIZADA) --- */}
+                        {/* BARRA DE RESUMEN */}
                         <div className="d-flex justify-content-around text-center mb-4 p-2 rounded" style={{ backgroundColor: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.1)" }}>
                             <div><strong>{tasksCompleted}</strong><br />Tareas completadas</div>
                             <div><strong>{tasksPending}</strong><br />Tareas sin hacer</div>
-                            {/* "Logros" eliminado */}
                             <div><strong>{clanCount}</strong><br />Clan</div>
                         </div>
 
-                        {/* --- INICIO CUADRÍCULA 2x2 (Responsive) --- */}
+                        {/* --- CUADRÍCULA 2x2 --- */}
                         <div className="row g-3 profile-grid">
                             {/* Detalles */}
                             <div className="col-md-6 profile-grid-item">
@@ -241,27 +208,32 @@ export const Profile = () => {
                                     <p><i className="fab fa-facebook me-2 text-info"></i> {store.profile.social.facebook}</p>
                                 </div>
                             </div>
-                            {/* <div className="col-md-6 profile-grid-item">
-                                <div className="detail-box">
-                                    <h4 className="mb-0">Calendario</h4>
-                                    <CalendarPlaceholder />
+                            
+                            {/* --- NUEVA TARJETA: GASTOS DEL MES --- */}
+                            <div className="col-md-6 profile-grid-item">
+                                <div className="detail-box text-center d-flex flex-column justify-content-center align-items-center" style={{ height: '100%' }}>
+                                    <h4 className="text-muted mb-3">Gastos del Mes</h4>
+                                    <i className="fas fa-chart-line fa-3x mb-2 text-danger"></i>
+                                    <h2 className="display-5 fw-bold text-danger">{totalExpenses.toFixed(2)}€</h2>
+                                    <Link to="/finances" className="btn btn-sm btn-outline-danger mt-2">
+                                        Ver Detalles
+                                    </Link>
                                 </div>
-                            </div> */}
+                            </div>
+
                         </div>
-                        {/* --- FIN CUADRÍCULA 2x2 --- */}
 
                         {/* --- BOTE PERSONAL --- */}
                         <div className="col-12 mt-4">
                             <div className="detail-box text-center">
                                 <div className="d-flex justify-content-center align-items-center mb-3">
                                     <h4 className="mb-0 me-3">Saldo del Bote Personal</h4>
-                                    {/* --- BOTÓN EDITAR BOTE (ARREGLADO) --- */}
                                     <button
                                         className="btn btn-sm btn-icon-only"
                                         onClick={() => setShowBoteModal(true)}
                                         title="Editar saldo"
                                     >
-                                        <i className="fas fa-pencil-alt text-info"></i> {/* <-- CLASE 'text-info' AÑADIDA */}
+                                        <i className="fas fa-pencil-alt text-info"></i>
                                     </button>
                                 </div>
                                 <h2 className="display-4 text-info" style={{ fontWeight: "bold" }}>

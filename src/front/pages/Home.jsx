@@ -31,13 +31,6 @@ export default function Home() {
         <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => window.location.href = "/register"}>
           ¡Empieza ahora!
         </motion.button>
-         
-         <Link to="/login">
-                            <motion.button className="btn btn-invite-user" onClick={() => setShowInviteModal(true)}>
-                                <i className="fas fa-user-plus me-2"></i>
-                                Login
-                            </motion.button>
-                        </Link>
       </section>
     </div>
   );

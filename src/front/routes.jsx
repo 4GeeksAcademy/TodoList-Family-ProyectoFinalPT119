@@ -17,6 +17,8 @@ import { TaskUser } from "./pages/TaskUser";
 import { Finances } from "./pages/Finances";
 import { Config } from "./pages/Config"
 import Home from "./pages/Home";
+import { SharedTasks } from "./pages/SharedTasks";
+import { Chat } from "./pages/Chat";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
@@ -41,6 +43,8 @@ export const router = createBrowserRouter(
         <Route path="/finances" element={<Finances />} /> 
         <Route path="/config" element={<Config />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/shared-tasks" element={<SharedTasks />} />
+        <Route path="/chat" element={<Chat />} />
       </Route>
     )
 );

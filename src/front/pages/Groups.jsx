@@ -21,6 +21,7 @@ export const Groups = () => {
     
     const handleCreateClan = (e) => {
         e.preventDefault();
+        // NOTA: Idealmente esto vendría del back, pero por ahora simulamos el código
         const mockCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
         
         dispatch({
@@ -58,19 +59,12 @@ export const Groups = () => {
         }
     };
 
-    const handleGoToFinances = () => {
-        if (store.activeClanId) {
-            navigate("/finances"); 
-        } else {
-            alert("Por favor, selecciona un clan primero.");
-        }
-    };
-
     return (
         <div className="container page-container">
         
+            {/* --- MODAL CREAR CLAN --- */}
             {showCreateModal && (
-                <div className="modal" style={{ display: "block" }}>
+                <div className="modal" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content modal-content-dark">
                             <form onSubmit={handleCreateClan}>
@@ -90,8 +84,9 @@ export const Groups = () => {
                 </div>
             )}
             
+            {/* --- MODAL CÓDIGO GENERADO --- */}
             {showCodeModal && (
-                <div className="modal" style={{ display: "block" }}>
+                <div className="modal" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content modal-content-dark">
                             <div className="modal-header"><h5 className="modal-title">¡Clan Creado!</h5></div>
@@ -107,8 +102,9 @@ export const Groups = () => {
                 </div>
             )}
 
+            {/* --- MODAL UNIRSE --- */}
             {showJoinModal && (
-                <div className="modal" style={{ display: "block" }}>
+                <div className="modal" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content modal-content-dark">
                             <form onSubmit={handleJoinClan}>
@@ -125,8 +121,6 @@ export const Groups = () => {
                     </div>
                 </div>
             )}
-            {(showCreateModal || showJoinModal || showCodeModal) && <div className="modal-backdrop fade show"></div>}
-
 
             
             <div className="main-box">
@@ -142,32 +136,35 @@ export const Groups = () => {
                                             <th>Categoría</th>
                                             <th>Miembros</th>
                                             <th>Fecha de Creación</th>
-                                            <th>Bote del Clan</th> 
+                                            <th>Bote del Clan</th> {/* YA CONECTADO */}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {store.clans.map(clan => (
-                                            <tr 
-                                                key={clan.id} 
-                                                onClick={() => handleSelectClan(clan.id)}
-                                                className={store.activeClanId === clan.id ? 'active-clan' : ''}
-                                                style={{ cursor: "pointer" }}
-                                            >
-                                                <td><strong>{clan.name}</strong></td>
-                                                <td>{clan.category}</td>
-                                                <td>{clan.members} integrantes</td>
-                                                <td>{clan.created}</td>
-                                                <td><strong>{(0).toFixed(2)} €</strong></td>
-                                            </tr>
-                                        ))}
+                                        {store.clans.map(clan => {
+                                            // --- LÓGICA NUEVA: OBTENER BOTE REAL ---
+                                            const currentBote = store.commonBote[clan.id] || 0; 
+                                            
+                                            return (
+                                                <tr 
+                                                    key={clan.id} 
+                                                    onClick={() => handleSelectClan(clan.id)}
+                                                    className={store.activeClanId === clan.id ? 'active-clan' : ''}
+                                                    style={{ cursor: "pointer" }}
+                                                >
+                                                    <td><strong>{clan.name}</strong></td>
+                                                    <td>{clan.category}</td>
+                                                    <td>{clan.members} integrantes</td>
+                                                    <td>{clan.created}</td>
+                                                    {/* MOSTRAMOS EL BOTE REAL */}
+                                                    <td><strong className="text-info">{currentBote.toFixed(2)} €</strong></td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    
-                    
-
                 </div> 
 
                 
@@ -185,14 +182,7 @@ export const Groups = () => {
                         Unirse a un Clan
                     </button>
                     
-                    
-                    <button 
-                        className="btn btn-custom-blue btn-lg" 
-                        onClick={handleGoToFinances}
-                        disabled={!store.activeClanId}
-                    >
-                        Finanzas del Clan
-                    </button>
+                    {/* --- BOTÓN FINANZAS ELIMINADO DE AQUÍ SEGÚN INSTRUCCIÓN --- */}
 
                     <button 
                         className="btn btn-outline-danger btn-lg"
