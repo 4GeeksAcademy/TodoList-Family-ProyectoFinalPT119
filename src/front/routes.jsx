@@ -14,11 +14,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import { Profile } from "./pages/Profile";
 import { Groups } from "./pages/Groups";
-import { TaskUser } from "./pages/TaskUser";
 import { Finances } from "./pages/Finances";
 import { Config } from "./pages/Config"
 import Home from "./pages/Home";
-import { SharedTasks } from "./pages/SharedTasks";
 import { Chat } from "./pages/Chat";
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,14 +53,6 @@ export const router = createBrowserRouter(
         }
       />
       <Route
-        path="/tasks"
-        element={
-          <PrivateRoute>
-            <TaskUser />
-          </PrivateRoute>
-        }
-      />
-      <Route
         path="/finances"
         element={
           <PrivateRoute>
@@ -75,14 +65,6 @@ export const router = createBrowserRouter(
         element={
           <PrivateRoute>
             <Config />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/shared-tasks"
-        element={
-          <PrivateRoute>
-            <SharedTasks />
           </PrivateRoute>
         }
       />

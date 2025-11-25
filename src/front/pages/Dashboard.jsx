@@ -108,10 +108,8 @@ export const Dashboard = () => {
                 </div>
                 <nav className="sidebar-nav">
                     <ul>
-                        <li><Link to="/dashboard" className="active"><i className="fas fa-desktop me-2"></i>Escritorio</Link></li>
-                        <li><Link to="/tasks"><i className="fas fa-tasks me-2"></i>Tus Tareas</Link></li>
+                        <li><Link to="/dashboard" className="active"><i className="fas fa-desktop me-2"></i>Escritorio</Link></li>               
                         <li><Link to="/groups"><i className="fas fa-users me-2"></i>Tus Clanes</Link></li>
-                        <li><Link to="/shared-tasks"><i className="fas fa-share-alt me-2"></i>Tareas de Clanes</Link></li>
                         <li><Link to="/finances"><i className="fas fa-wallet me-2"></i>Finanzas</Link></li>
                         <li><Link to="/profile"><i className="fas fa-user-circle me-2"></i>Tu Perfil</Link></li>
                         <li><Link to="/config"><i className="fas fa-cog me-2"></i>Configuración</Link></li>

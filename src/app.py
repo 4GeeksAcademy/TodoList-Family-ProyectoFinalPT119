@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 CORS(app, resources={
     r"/api/*": {
-        "origins": "https://shiny-xylophone-97xjjrww4vrp2766r-3000.app.github.dev",
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
