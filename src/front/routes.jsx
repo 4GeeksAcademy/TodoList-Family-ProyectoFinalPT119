@@ -20,66 +20,70 @@ import Home from "./pages/Home";
 import { Chat } from "./pages/Chat";
 export const router = createBrowserRouter(
   createRoutesFromElements(
-
-
+    <>
     // Root Route: All navigation will start from here.
-    <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
-      <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} /> {/* Ruta explícita */}
-      {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
+      <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} /> {/* Ruta explícita */}
+        {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
 
-      <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
-      <Route path="/demo" element={<Demo />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/finances"
-        element={
-          <PrivateRoute>
-            <Finances />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/config"
-        element={
-          <PrivateRoute>
-            <Config />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/chat"
-        element={
-          <PrivateRoute>
-            <Chat />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/groups"
-        element={
-          <PrivateRoute>
-            <Groups />
-          </PrivateRoute>
-        }
-      />
-    </Route>
+        <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
+        <Route path="/demo" element={<Demo />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/finances"
+          element={
+            <PrivateRoute>
+              <Finances />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/config"
+          element={
+            <PrivateRoute>
+              <Config />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/groups"
+          element={
+            <PrivateRoute>
+              <Groups />
+            </PrivateRoute>
+          }
+        />
+      </Route>
+      <Route path="/resetPassword/:token*" element={<Login />} />
+
+    </>
+
+
   )
 );

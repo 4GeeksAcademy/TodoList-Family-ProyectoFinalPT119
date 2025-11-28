@@ -26,9 +26,7 @@ def forgot_password():
     serializer = URLSafeTimedSerializer(os.getenv("MAIL_PASSWORD"))
     token = serializer.dumps(email, salt="password-reset")
 
-    caracter = "_"
-    token_fixed = re.sub(r"\.", caracter, token)
-    reset_email = f"{url_front}resetPassword/${token_fixed}"
+    reset_email = f"{url_front}resetPassword/${token}/token"
 
     msg = Message(
         'Recupera contraseña',
@@ -46,15 +44,13 @@ def forgot_password():
 def reset_password():
     data = request.get_json()
     token = data.get('token')
-    print(token)
     new_password = data.get('new_password')
-    token_correct = re.sub(r"_", r"\.", token)
 
     serializer = URLSafeTimedSerializer(os.getenv("MAIL_PASSWORD"))
 
-    email = serializer.loads(token_correct, salt="password-reset", max_age=60)
+    email = serializer.loads(token[1:], salt="password-reset", max_age=60)
 
-    user = User.query.filter_by(email = email).first()
+    user = User.query.filter_by(email=email).first()
     hashed_password = generate_password_hash(new_password)
     user.password = hashed_password
     db.session.commit()
